@@ -1,0 +1,1053 @@
+.bookings {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.bookingsContent {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 40px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a2332;
+  margin: 0;
+}
+
+.header p {
+  color: #718096;
+  margin: 4px 0 0 0;
+}
+
+.bookNowBtn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.bookNowBtn:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.3);
+}
+
+.btnIcon {
+  font-size: 18px;
+}
+
+/* Stats Row */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.statCard {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+}
+
+.statIconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statIcon {
+  font-size: 24px;
+}
+
+.statInfo {
+  flex: 1;
+}
+
+.statNumber {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a2332;
+  margin: 0;
+}
+
+.statLabel {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+/* Filter Section */
+.filterSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.filterTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterTab {
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterTab:hover {
+  background: #f7fafc;
+}
+
+.filterTab.active {
+  background: #1976d2;
+  color: white;
+  border-color: #1976d2;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 16px;
+  gap: 12px;
+  min-width: 280px;
+}
+
+.searchIcon {
+  color: #a0aec0;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  color: #1a2332;
+}
+
+.searchInput::placeholder {
+  color: #a0aec0;
+}
+
+/* Bookings List */
+.bookingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Booking Card */
+.bookingCard {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s;
+}
+
+.bookingCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.bookingHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.bookingInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bookingRef {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.refLabel {
+  font-size: 12px;
+  color: #a0aec0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.refValue {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2332;
+}
+
+.bookingDate {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #718096;
+}
+
+.dateIcon {
+  font-size: 14px;
+}
+
+.bookingStatus {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.statusBadge.confirmed {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.statusBadge.pending {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.statusBadge.completed {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.statusBadge.cancelled {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.paymentStatus {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.paymentStatus.paid {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.paymentStatus.pending {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.paymentStatus.refunded {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.paymentStatus.failed {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+/* Booking Details */
+.bookingDetails {
+  margin-bottom: 16px;
+}
+
+.routeInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.locationInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.markerIcon {
+  font-size: 18px;
+}
+
+.locationLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.locationValue {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a2332;
+}
+
+.routeArrow {
+  color: #a0aec0;
+  font-size: 14px;
+}
+
+.timeInfo {
+  display: flex;
+  gap: 24px;
+}
+
+.timeItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeIcon {
+  color: #1976d2;
+  font-size: 16px;
+}
+
+.timeLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timeValue {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2332;
+}
+
+.bookingMeta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  background: #f7fafc;
+  border-radius: 10px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.metaIcon {
+  color: #1976d2;
+  font-size: 16px;
+}
+
+.totalAmount {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1976d2;
+}
+
+.specialRequests {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #fff3e0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.infoIcon {
+  color: #f57c00;
+  margin-top: 2px;
+}
+
+.specialRequests span {
+  font-size: 13px;
+  color: #4a5568;
+}
+
+.seatInfo, .passengerInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.seatLabel, .passengerLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.seatTag {
+  font-size: 13px;
+  color: #1a2332;
+  background: #e3f2fd;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.passengerTag {
+  font-size: 13px;
+  color: #1a2332;
+  background: #f3e5f5;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Booking Actions */
+.bookingActions {
+  display: flex;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #edf2f7;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  background: #f7fafc;
+  border-color: #1976d2;
+  color: #1976d2;
+}
+
+.actionIcon {
+  font-size: 14px;
+}
+
+.cancelBtn {
+  color: #d32f2f;
+  border-color: #ffebee;
+}
+
+.cancelBtn:hover {
+  background: #ffebee;
+  border-color: #d32f2f;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 16px;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  color: #cbd5e0;
+  margin-bottom: 16px;
+}
+
+.emptyState h4 {
+  font-size: 18px;
+  color: #1a2332;
+  margin: 0 0 8px 0;
+}
+
+.emptyState p {
+  color: #718096;
+  margin: 0;
+}
+
+/* Loading */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+}
+
+.loadingSpinner {
+  font-size: 48px;
+  color: #1976d2;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loadingContainer p {
+  color: #718096;
+  font-size: 16px;
+}
+
+/* Error */
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.errorContent {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.errorContent h3 {
+  font-size: 20px;
+  color: #1a2332;
+  margin: 0 0 8px 0;
+}
+
+.errorContent p {
+  color: #718096;
+  margin: 0 0 20px 0;
+}
+
+.retryBtn {
+  padding: 10px 32px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retryBtn:hover {
+  background: #1565c0;
+}
+
+/* ====== RESPONSIVE DESIGN ====== */
+
+/* Tablets and smaller laptops */
+@media (max-width: 1024px) {
+  .routeInfo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .timeInfo {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .bookingsContent {
+    padding: 20px;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .header h1 {
+    font-size: 22px;
+  }
+  
+  .header p {
+    font-size: 14px;
+  }
+  
+  .bookNowBtn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .statsRow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .statCard {
+    padding: 16px 20px;
+  }
+  
+  .statNumber {
+    font-size: 20px;
+  }
+  
+  .statLabel {
+    font-size: 13px;
+  }
+  
+  .statIconWrapper {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .statIcon {
+    font-size: 20px;
+  }
+  
+  .filterSection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .filterTabs {
+    gap: 6px;
+  }
+  
+  .filterTab {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .searchBar {
+    min-width: auto;
+    padding: 6px 12px;
+  }
+  
+  .searchInput {
+    font-size: 13px;
+  }
+  
+  .bookingCard {
+    padding: 18px 20px;
+    border-radius: 12px;
+  }
+  
+  .bookingHeader {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .bookingStatus {
+    flex-wrap: wrap;
+  }
+  
+  .statusBadge {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+  
+  .paymentStatus {
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+  
+  .locationInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .routeArrow {
+    transform: rotate(90deg);
+  }
+  
+  .locationValue {
+    font-size: 14px;
+  }
+  
+  .timeInfo {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .timeValue {
+    font-size: 13px;
+  }
+  
+  .bookingMeta {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 14px;
+  }
+  
+  .metaItem {
+    font-size: 13px;
+  }
+  
+  .totalAmount {
+    font-size: 14px;
+  }
+  
+  .bookingActions {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .actionBtn {
+    justify-content: center;
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+  
+  .seatInfo, .passengerInfo {
+    font-size: 12px;
+  }
+  
+  .seatTag, .passengerTag {
+    font-size: 12px;
+    padding: 1px 6px;
+  }
+  
+  .refValue {
+    font-size: 13px;
+  }
+  
+  .bookingDate {
+    font-size: 12px;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+  .bookingsContent {
+    padding: 12px 16px;
+  }
+  
+  .header h1 {
+    font-size: 20px;
+  }
+  
+  .header p {
+    font-size: 13px;
+  }
+  
+  .bookNowBtn {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+  
+  .btnIcon {
+    font-size: 16px;
+  }
+  
+  .statCard {
+    padding: 12px 16px;
+    gap: 14px;
+  }
+  
+  .statIconWrapper {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .statIcon {
+    font-size: 18px;
+  }
+  
+  .statNumber {
+    font-size: 18px;
+  }
+  
+  .statLabel {
+    font-size: 12px;
+  }
+  
+  .filterTab {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+  
+  .searchBar {
+    padding: 4px 10px;
+    border-radius: 8px;
+  }
+  
+  .searchInput {
+    font-size: 12px;
+  }
+  
+  .searchIcon {
+    font-size: 14px;
+  }
+  
+  .bookingCard {
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+  
+  .bookingRef {
+    gap: 4px;
+  }
+  
+  .refLabel {
+    font-size: 10px;
+  }
+  
+  .refValue {
+    font-size: 12px;
+  }
+  
+  .bookingDate {
+    font-size: 11px;
+  }
+  
+  .dateIcon {
+    font-size: 12px;
+  }
+  
+  .statusBadge {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+  
+  .paymentStatus {
+    font-size: 9px;
+    padding: 2px 8px;
+  }
+  
+  .locationLabel {
+    font-size: 10px;
+  }
+  
+  .locationValue {
+    font-size: 13px;
+  }
+  
+  .markerIcon {
+    font-size: 14px;
+  }
+  
+  .routeArrow {
+    font-size: 12px;
+  }
+  
+  .timeIcon {
+    font-size: 14px;
+  }
+  
+  .timeLabel {
+    font-size: 10px;
+  }
+  
+  .timeValue {
+    font-size: 12px;
+  }
+  
+  .bookingMeta {
+    padding: 8px 12px;
+  }
+  
+  .metaItem {
+    font-size: 12px;
+  }
+  
+  .metaIcon {
+    font-size: 14px;
+  }
+  
+  .totalAmount {
+    font-size: 13px;
+  }
+  
+  .specialRequests {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .infoIcon {
+    font-size: 14px;
+  }
+  
+  .seatLabel, .passengerLabel {
+    font-size: 12px;
+  }
+  
+  .seatTag, .passengerTag {
+    font-size: 11px;
+    padding: 1px 4px;
+  }
+  
+  .actionBtn {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+  
+  .actionIcon {
+    font-size: 12px;
+  }
+  
+  .emptyState {
+    padding: 40px 16px;
+  }
+  
+  .emptyIcon {
+    font-size: 36px;
+  }
+  
+  .emptyState h4 {
+    font-size: 16px;
+  }
+  
+  .emptyState p {
+    font-size: 13px;
+  }
+  
+  .errorContent {
+    padding: 24px 20px;
+  }
+  
+  .errorContent h3 {
+    font-size: 18px;
+  }
+  
+  .loadingContainer {
+    min-height: 300px;
+  }
+  
+  .loadingSpinner {
+    font-size: 36px;
+  }
+  
+  .loadingContainer p {
+    font-size: 14px;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .bookingsContent {
+    padding: 8px 10px;
+  }
+  
+  .header h1 {
+    font-size: 18px;
+  }
+  
+  .statCard {
+    padding: 10px 12px;
+  }
+  
+  .statNumber {
+    font-size: 16px;
+  }
+  
+  .filterTab {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+  
+  .bookingCard {
+    padding: 10px 12px;
+  }
+  
+  .refValue {
+    font-size: 11px;
+  }
+  
+  .locationValue {
+    font-size: 12px;
+  }
+  
+  .timeValue {
+    font-size: 11px;
+  }
+  
+  .actionBtn {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+  
+  .statusBadge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  
+  .paymentStatus {
+    font-size: 8px;
+    padding: 2px 6px;
+  }
+}

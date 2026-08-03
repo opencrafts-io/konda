@@ -1,0 +1,439 @@
+.addTrip {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.addTripContent {
+  max-width: 1300px; /* Expanded for a wider layout */
+  margin: 0 auto;
+  padding: 24px 32px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.backButton:hover {
+  background: #e2e8f0;
+}
+
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.step {
+  font-size: 14px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.step.active {
+  color: #1976d2;
+}
+
+.stepLine {
+  width: 32px;
+  height: 2px;
+  background: #cbd5e1;
+}
+
+.addTripBody {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 32px 40px; /* Increased padding */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: -4px;
+  margin-bottom: 24px;
+}
+
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.formSection h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: #1e293b;
+  margin-bottom: 14px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.formRowTriple {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.formRowFour {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  border-color: #1976d2;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.cancelBtn, .backBtn {
+  padding: 10px 24px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #475569;
+}
+
+.nextBtn, .submitBtn {
+  padding: 10px 28px;
+  background: #1976d2;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Step 2 Controls & Layout */
+.layoutControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.controlGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controlGroup label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.rowControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.miniBtn {
+  width: 28px;
+  height: 28px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.rowVal {
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+}
+
+.columnInput {
+  width: 90px;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+}
+
+.selectInput {
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+}
+
+.controlActionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.regenerateBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #1976d2;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.totalSeatsBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #bae6fd;
+  font-size: 13px;
+}
+
+.seatIconBadge {
+  font-size: 14px;
+}
+
+/* Bus Container & Pricing Builder */
+.builderGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.busContainer {
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.busHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #cbd5e1;
+  padding: 8px;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.steeringWheel {
+  font-size: 20px;
+}
+
+.busBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 540px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.busRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rowTag {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  width: 20px;
+}
+
+.rowSeatsGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seatCard {
+  width: 58px;
+  height: 58px;
+  background: #ffffff;
+  border: 1px solid #94a3b8;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.windowSeat {
+  border-color: #1976d2;
+}
+
+.seatNum {
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.seatPriceTag {
+  font-size: 8px;
+  color: #16a34a;
+  font-weight: 700;
+}
+
+.aisleGap {
+  width: 32px;
+  text-align: center;
+  font-size: 8px;
+  color: #94a3b8;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* Pricing Panel */
+.pricingPanel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pricingPanel h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panelHint {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.pricingTable {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.pricingHeader {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  font-weight: 700;
+  font-size: 12px;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.pricingRowsList {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.pricingRowItem {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rowLabel {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.seatListLabel {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.rowPriceInput {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.errorMessage {
+  margin-top: 12px;
+  padding: 10px;
+  background: #fef2f2;
+  color: #dc2626;
+  border-radius: 6px;
+  font-size: 13px;
+}
