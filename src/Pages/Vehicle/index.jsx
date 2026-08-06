@@ -74,7 +74,6 @@ const VehicleManagement = () => {
       setLoading(true);
       setError(null);
       const response = await fetchUserData(token, "vehicle");
-      console.log("Vehicles:", response);
       
       if (response && response.data) {
         setVehicles(response.data);
@@ -82,7 +81,6 @@ const VehicleManagement = () => {
         setVehicles([]);
       }
     } catch (err) {
-      console.error("Error fetching vehicles:", err);
       setError(err.message || "Failed to load vehicles");
     } finally {
       setLoading(false);
@@ -101,7 +99,6 @@ const VehicleManagement = () => {
       setError(null);
       const token = access_token || localStorage.getItem('access_token');
       const response = await fetchUserData(token, `vehicle/type/${searchType.toUpperCase()}`);
-      console.log("Search by type:", response);
       
       if (response && response.data) {
         setSearchResults(response.data);
@@ -112,7 +109,6 @@ const VehicleManagement = () => {
         setError("No vehicles found for this type");
       }
     } catch (err) {
-      console.error("Error searching vehicles:", err);
       setError(err.message || "Failed to search vehicles");
     } finally {
       setIsSearching(false);
@@ -131,8 +127,7 @@ const VehicleManagement = () => {
       setError(null);
       const token = access_token || localStorage.getItem('access_token');
       const response = await fetchUserData(token, `vehicle/registration/${encodeURIComponent(searchRegistration)}`);
-      console.log("Search by registration:", response);
-      
+
       if (response) {
         setSearchResults([response]);
         setVehicles([response]);
@@ -142,7 +137,6 @@ const VehicleManagement = () => {
         setError("No vehicle found with this registration");
       }
     } catch (err) {
-      console.error("Error searching vehicles:", err);
       setError(err.message || "Failed to search vehicles");
     } finally {
       setIsSearching(false);
@@ -161,7 +155,6 @@ const VehicleManagement = () => {
       setError(null);
       const token = access_token || localStorage.getItem('access_token');
       const response = await fetchUserData(token, `vehicle/operator?operator=${encodeURIComponent(searchOperator)}`);
-      console.log("Search by operator:", response);
       
       if (response && response.data) {
         setSearchResults(response.data);
@@ -172,7 +165,6 @@ const VehicleManagement = () => {
         setError("No vehicles found for this operator");
       }
     } catch (err) {
-      console.error("Error searching vehicles:", err);
       setError(err.message || "Failed to search vehicles");
     } finally {
       setIsSearching(false);
@@ -226,9 +218,7 @@ const VehicleManagement = () => {
         vehicle_image: formData.vehicle_image || "https://example.com/images/default.jpg"
       };
       
-      console.log("Creating vehicle:", payload);
       const response = await PosthData(token, "vehicle", payload);
-      console.log("Create response:", response);
       
       setSuccess("Vehicle created successfully!");
       resetForm();
@@ -238,7 +228,6 @@ const VehicleManagement = () => {
       await fetchVehicles(token);
       
     } catch (err) {
-      console.error("Error creating vehicle:", err);
       setError(err.message || "Failed to create vehicle");
     } finally {
       setLoading(false);
@@ -277,9 +266,7 @@ const VehicleManagement = () => {
         vehicle_image: formData.vehicle_image || "https://example.com/images/default.jpg"
       };
       
-      console.log("Updating vehicle:", payload);
       const response = await PatchData(token, `vehicle/${selectedVehicle.id}`, payload);
-      console.log("Update response:", response);
       
       setSuccess("Vehicle updated successfully!");
       setShowEditModal(false);
@@ -289,7 +276,6 @@ const VehicleManagement = () => {
       await fetchVehicles(token);
       
     } catch (err) {
-      console.error("Error updating vehicle:", err);
       setError(err.message || "Failed to update vehicle");
     } finally {
       setLoading(false);
@@ -314,7 +300,6 @@ const VehicleManagement = () => {
       await fetchVehicles(token);
       
     } catch (err) {
-      console.error("Error deleting vehicle:", err);
       setError(err.message || "Failed to delete vehicle");
     } finally {
       setLoading(false);

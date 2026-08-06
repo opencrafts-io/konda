@@ -68,9 +68,7 @@ const TripView = () => {
       setLoading(true);
       setError(null);
       
-      console.log(`Fetching trip with ID: ${tripId}`);
       const response = await fetchUserData(token, `trip/id/${tripId}`);
-      console.log("Trip data:", response);
       
       if (response) {
         setTrip(response);
@@ -78,7 +76,6 @@ const TripView = () => {
         setError("Failed to load trip data");
       }
     } catch (err) {
-      console.error("Error fetching trip:", err);
       setError(err.message || "Failed to load trip details");
     } finally {
       setLoading(false);
@@ -91,10 +88,8 @@ const TripView = () => {
       setLoadingSeatDetails(true);
       const token = access_token || localStorage.getItem('access_token');
       const response = await fetchUserData(token, `trip_seat/${seatId}`);
-      console.log("Seat details:", response);
       setSelectedSeatDetails(response);
     } catch (err) {
-      console.error("Error fetching seat details:", err);
       setSelectedSeatDetails(null);
     } finally {
       setLoadingSeatDetails(false);

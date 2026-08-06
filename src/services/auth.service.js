@@ -1,8 +1,5 @@
 // src/services/auth.service.js
 
-// Use the QA Verisafe URL your team gave you
-const VERISAFE_URL = 'https://qaverisafe.opencrafts.io';
-
 class AuthService {
   constructor() {
     // Use localStorage for persistent storage
@@ -10,31 +7,47 @@ class AuthService {
     this.refreshToken = localStorage.getItem('refresh_token');
     this.accessExpiresAt = localStorage.getItem('access_expires_at');
     this.userData = JSON.parse(localStorage.getItem('user_data') || 'null');
+    this._isFetchingUser = false;
+    this._lastFetchTime = 0;
+    this._cacheDuration = 60000; // 1 minute cache
+    
+    // Get URLs from environment variables
+    this.baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
+    this.verisafeUrl = import.meta.env.VITE_VERISAFE_URL || 'https://qaverisafe.opencrafts.io';
+    this.appUrl = import.meta.env.VITE_APP_URL || 'http://localhost:8080';
   }
 
-  // Get the base URL for API calls (use proxy in development)
+  // Get the base URL for API calls
   getApiBaseUrl() {
-    return import.meta.env.DEV ? '/verisafe' : 'https://qaverisafe.opencrafts.io';
+    // In development, use the proxy path
+    if (import.meta.env.DEV) {
+      return '/verisafe';
+    }
+    return this.verisafeUrl;
+  }
+
+  // Get the backend base URL for direct calls
+  getBackendBaseUrl() {
+    return this.baseUrl;
   }
 
   // Initiate Google Sign-In - Mobile Flow with deep_link
   signInWithGoogle() {
-    const deepLink = 'http://localhost:8080/auth/callback';
-    const url = `${VERISAFE_URL}/auth/google?deep_link=${encodeURIComponent(deepLink)}`;
+    const deepLink = `${this.appUrl}/auth/callback`;
+    const url = `${this.verisafeUrl}/auth/google?deep_link=${encodeURIComponent(deepLink)}`;
     window.location.href = url;
   }
 
   // Initiate Apple Sign-In - Mobile Flow with deep_link
   signInWithApple() {
-    const deepLink = 'http://localhost:8080/auth/callback';
-    const url = `${VERISAFE_URL}/auth/apple?deep_link=${encodeURIComponent(deepLink)}`;
+    const deepLink = `${this.appUrl}/auth/callback`;
+    const url = `${this.verisafeUrl}/auth/apple?deep_link=${encodeURIComponent(deepLink)}`;
     window.location.href = url;
   }
 
   // Exchange code for tokens (mobile/deep link flow)
   async exchangeCode(code) {
     try {
-      
       const baseUrl = this.getApiBaseUrl();
       const url = `${baseUrl}/auth/token/exchange`;
       
@@ -47,20 +60,18 @@ class AuthService {
         credentials: 'include',
       });
 
-
       if (!response.ok) {
         let errorMessage = `Token exchange failed: ${response.status}`;
         try {
           const errorData = await response.json();
           errorMessage = errorData.error || errorMessage;
         } catch (e) {
-          const text = await response.text();
+          // Ignore
         }
         throw new Error(errorMessage);
       }
 
       const tokens = await response.json();
-      
       return tokens;
     } catch (error) {
       throw error;
@@ -71,7 +82,6 @@ class AuthService {
   async checkAuth() {
     try {
       const token = this.getAccessToken();
-      const baseUrl = this.getApiBaseUrl();
       
       if (!token) {
         return null;
@@ -81,7 +91,6 @@ class AuthService {
       if (this.isTokenExpired()) {
         try {
           await this.refreshToken();
-          // After refresh, get user profile with new token
           const user = await this.getUserProfile();
           return user;
         } catch (refreshError) {
@@ -95,7 +104,6 @@ class AuthService {
         const user = await this.getUserProfile();
         return user;
       } catch (profileError) {
-        // If we have stored user data, return it
         if (this.userData) {
           return this.userData;
         }
@@ -106,9 +114,29 @@ class AuthService {
     }
   }
 
-  // Get user profile - Using /accounts/me endpoint
-  async getUserProfile() {
+  // Get user profile - With caching to prevent infinite requests
+  async getUserProfile(forceRefresh = false) {
     try {
+      // Check cache first
+      const now = Date.now();
+      if (!forceRefresh && this.userData && (now - this._lastFetchTime) < this._cacheDuration) {
+        return this.userData;
+      }
+
+      // Prevent concurrent requests
+      if (this._isFetchingUser) {
+        return new Promise((resolve) => {
+          const checkInterval = setInterval(() => {
+            if (!this._isFetchingUser) {
+              clearInterval(checkInterval);
+              resolve(this.userData);
+            }
+          }, 100);
+        });
+      }
+
+      this._isFetchingUser = true;
+      
       const token = this.getAccessToken();
       
       if (!token) {
@@ -125,7 +153,6 @@ class AuthService {
         credentials: 'include',
       });
 
-
       if (!response.ok) {
         if (response.status === 401) {
           this.logout();
@@ -137,7 +164,7 @@ class AuthService {
           const errorData = await response.json();
           errorMessage = errorData.error || errorMessage;
         } catch (e) {
-          const text = await response.text();
+          // Ignore
         }
         throw new Error(errorMessage);
       }
@@ -146,11 +173,14 @@ class AuthService {
       
       // Cache user data
       this.userData = user;
+      this._lastFetchTime = Date.now();
       localStorage.setItem('user_data', JSON.stringify(user));
       
       return user;
     } catch (error) {
       throw error;
+    } finally {
+      this._isFetchingUser = false;
     }
   }
 
@@ -163,12 +193,12 @@ class AuthService {
     localStorage.setItem('access_token', tokens.access_token);
     localStorage.setItem('refresh_token', tokens.refresh_token);
     localStorage.setItem('access_expires_at', tokens.access_expires_at);
-    
   }
 
   // Store user data
   setUserData(user) {
     this.userData = user;
+    this._lastFetchTime = Date.now();
     localStorage.setItem('user_data', JSON.stringify(user));
   }
 
@@ -224,7 +254,7 @@ class AuthService {
     }
   }
 
-  // Make authenticated API call
+  // Make authenticated API call to the backend
   async apiCall(endpoint, options = {}) {
     let token = this.getAccessToken();
 
@@ -238,7 +268,8 @@ class AuthService {
       }
     }
 
-    const baseUrl = this.getApiBaseUrl();
+    // Use the backend base URL for API calls
+    const baseUrl = this.getBackendBaseUrl();
     const requestOptions = {
       method: options.method || 'GET',
       headers: {
@@ -320,7 +351,7 @@ class AuthService {
         });
       }
     } catch (error) {
-      throw error;
+     throw error
     } finally {
       // Clear all auth data
       localStorage.removeItem('access_token');
@@ -335,6 +366,7 @@ class AuthService {
       this.refreshToken = null;
       this.accessExpiresAt = null;
       this.userData = null;
+      this._isFetchingUser = false;
     }
   }
 
