@@ -87,7 +87,6 @@ const EditTrip = () => {
       setError(null);
       
       const response = await fetchUserData(token, `trip/id/${tripId}`);
-      console.log("Trip data:", response);
       
       if (response) {
         setTrip(response);
@@ -111,7 +110,6 @@ const EditTrip = () => {
         setError("Failed to load trip data");
       }
     } catch (err) {
-      console.error("Error fetching trip:", err);
       setError(err.message || "Failed to load trip details");
     } finally {
       setLoading(false);
@@ -150,24 +148,19 @@ const EditTrip = () => {
         status: formData.status
       };
 
-      console.log("Updating trip with:", updateData);
-      
       // Use PatchData for partial update
       const response = await PatchData(
         token,
         `trip/${tripId}`,
         updateData
       );
-      
-      console.log("Update response:", response);
-      
+           
       setSuccess("Trip updated successfully!");
       
       // Refresh trip data
       await fetchTripData(token);
       
     } catch (err) {
-      console.error("Error updating trip:", err);
       setError(err.message || "Failed to update trip");
     } finally {
       setSaving(false);
@@ -190,7 +183,6 @@ const EditTrip = () => {
         { is_available: newStatus }
       );
       
-      console.log("Seat update response:", response);
       
       // Update local seat state
       setTrip(prev => ({
@@ -203,7 +195,6 @@ const EditTrip = () => {
       setSuccess(`Seat ${seatId} ${newStatus ? 'available' : 'booked'} successfully!`);
       
     } catch (err) {
-      console.error("Error updating seat:", err);
       setError(err.message || "Failed to update seat");
     } finally {
       setUpdatingSeat(null);

@@ -65,7 +65,6 @@ const AdminTrips = () => {
       setError(null);
       
       const response = await fetchUserData(token, "trip");
-      console.log("API Response:", response);
       
       if (response && response.data) {
         const tripsData = response.data;
@@ -88,7 +87,6 @@ const AdminTrips = () => {
         setTrips([]);
       }
     } catch (err) {
-      console.error("Error fetching trips:", err);
       setError(err.message || "Failed to load trips");
     } finally {
       setLoading(false);

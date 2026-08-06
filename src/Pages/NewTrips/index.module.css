@@ -437,3 +437,155 @@
   border-radius: 6px;
   font-size: 13px;
 }
+
+/* Add to your existing CSS */
+
+/* Search Vehicle */
+.searchVehicleGroup {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.searchInputGroup {
+  display: flex;
+  flex: 1;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px 0 0 8px;
+  font-size: 14px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.searchBtn {
+  padding: 10px 20px;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchBtn:hover:not(:disabled) {
+  background: #1565c0;
+}
+
+.searchBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.clearVehicleBtn {
+  padding: 10px 16px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.clearVehicleBtn:hover {
+  background: #fecaca;
+}
+
+/* Vehicle Card */
+.vehicleCard {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.vehicleCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.vehicleFoundIcon {
+  color: #22c55e;
+  font-size: 18px;
+}
+
+.vehicleFoundText {
+  font-weight: 600;
+  color: #16a34a;
+}
+
+.vehicleCardBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.vehicleCardRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.vehicleCardLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.vehicleCardValue {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2332;
+}
+
+/* Success Message */
+.successMessage {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .searchVehicleGroup {
+    flex-direction: column;
+  }
+  
+  .searchInputGroup {
+    width: 100%;
+  }
+  
+  .clearVehicleBtn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .vehicleCardBody {
+    grid-template-columns: 1fr;
+  }
+}

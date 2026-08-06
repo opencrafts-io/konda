@@ -61,7 +61,7 @@ const Bookings = () => {
       setLoading(true);
       setError(null);
 
-      const response = await fetchUserData(token, "booking/user");
+      const response = await fetchUserData(token, "booking/all");
 
       if (response && response.data) {
         setBookings(response.data);

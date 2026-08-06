@@ -11,19 +11,31 @@ import {
   FaMinus,
   FaSync,
   FaTh,
-  FaChair as FaSeatIcon
+  FaChair as FaSeatIcon,
+  FaSearch,
+  FaSpinner,
+  FaCheckCircle,
+  FaInfoCircle,
+  FaIdCard,
+  FaUser,
+  FaTimes
 } from "react-icons/fa";
 import { GiSteeringWheel } from "react-icons/gi";
 import Layout from "../../Layout/index.jsx";
 import { LoginContext } from "../../loginContext";
-import { PosthData } from "../../Components/titan.js";
+import { PosthData, fetchUserData } from "../../Components/titan.js";
 
 const AddTrip = () => {
   const navigate = useNavigate();
   const { access_token } = useContext(LoginContext);
   const [loading, setLoading] = useState(false);
+  const [searchingVehicle, setSearchingVehicle] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
+  const [vehicleFound, setVehicleFound] = useState(false);
+  const [vehicleData, setVehicleData] = useState(null);
+  const [vehicleSearchAttempted, setVehicleSearchAttempted] = useState(false);
 
   // Trip Form State
   const [tripData, setTripData] = useState({
@@ -32,14 +44,11 @@ const AddTrip = () => {
     departure_time: "",
     arrival_time: "",
     base_price: 500,
-    status: "SCHEDULED",
-    vehicle: {
-      operator_name: "",
-      vehicle_type: "MATATU",
-      service_class: "STANDARD",
-      registration_number: ""
-    }
+    vehicle_id: ""
   });
+
+  // Vehicle Search State
+  const [searchRegistration, setSearchRegistration] = useState("");
 
   // Seat Configuration Setup
   const [seatConfig, setSeatConfig] = useState({
@@ -52,21 +61,85 @@ const AddTrip = () => {
     }
   });
 
-  // Dedicated string state to allow natural comma typing
   const [columnInputText, setColumnInputText] = useState("A, B, C");
   const [seats, setSeats] = useState([]);
 
   const vehicleTypes = ["MATATU", "MINIBUS", "BUS", "COACH"];
   const serviceClasses = ["STANDARD", "AC", "VIP", "LUXURY"];
 
-  /**
-   * Handle changes to the Column text input gracefully
-   */
+  // Search for vehicle by registration
+  const searchVehicle = async () => {
+    if (!searchRegistration.trim()) {
+      setError("Please enter a registration number");
+      return;
+    }
+
+    try {
+      setSearchingVehicle(true);
+      setError(null);
+      setSuccess(null);
+      setVehicleSearchAttempted(true);
+      
+      const token = access_token || localStorage.getItem('access_token');
+      const encodedRegistration = encodeURIComponent(searchRegistration.trim());
+      const response = await fetchUserData(token, `vehicle/registration/${encodedRegistration}`);
+      
+      // Check if response is an array (search results) or a single object
+      let vehicle = null;
+      if (Array.isArray(response)) {
+        if (response.length > 0) {
+          vehicle = response[0];
+        }
+      } else if (response && typeof response === 'object') {
+        vehicle = response;
+      }
+      
+      if (vehicle) {
+        setVehicleData(vehicle);
+        setVehicleFound(true);
+        setTripData(prev => ({ 
+          ...prev, 
+          vehicle_id: vehicle.id 
+        }));
+        
+        // Auto-populate seat configuration based on vehicle
+        const totalSeats = vehicle.total_seats || 33;
+        const rows = Math.ceil(totalSeats / 3);
+        setSeatConfig(prev => ({
+          ...prev,
+          rows: rows
+        }));
+      } else {
+        setVehicleFound(false);
+        setVehicleData(null);
+        setError("No vehicle found with this registration number");
+      }
+    } catch (err) {
+      setVehicleFound(false);
+      setVehicleData(null);
+      
+      if (err.message && err.message.includes("404")) {
+        setError(`Vehicle with registration "${searchRegistration}" not found. Please check the registration number.`);
+      } else {
+        setError(err.message || "Failed to search vehicle");
+      }
+    } finally {
+      setSearchingVehicle(false);
+    }
+  };
+
+  // Handle Enter key press for search
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      searchVehicle();
+    }
+  };
+
   const handleColumnTextChange = (e) => {
     const rawVal = e.target.value;
-    setColumnInputText(rawVal); // Keeps the user's live typing (including commas)
+    setColumnInputText(rawVal);
 
-    // Parse non-empty, unique upper-case column names
     const parsedCols = rawVal
       .split(",")
       .map((c) => c.trim().toUpperCase())
@@ -120,15 +193,7 @@ const AddTrip = () => {
 
   const handleTripChange = (e) => {
     const { name, value } = e.target;
-    if (name.includes("vehicle.")) {
-      const field = name.split(".")[1];
-      setTripData((prev) => ({
-        ...prev,
-        vehicle: { ...prev.vehicle, [field]: value }
-      }));
-    } else {
-      setTripData((prev) => ({ ...prev, [name]: value }));
-    }
+    setTripData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRowPriceChange = (row, price) => {
@@ -150,6 +215,13 @@ const AddTrip = () => {
     try {
       setLoading(true);
       setError(null);
+      setSuccess(null);
+
+      if (!tripData.vehicle_id) {
+        setError("Please search and select a vehicle first");
+        setLoading(false);
+        return;
+      }
 
       const cleanSeats = seats.map(({ is_available, ...seat }) => ({
         seat_number: seat.seat_number,
@@ -160,20 +232,28 @@ const AddTrip = () => {
       }));
 
       const payload = {
-        vehicle_id: "1217cae8-8062-4e78-87d2-816d88b3109f",
+        vehicle_id: tripData.vehicle_id,
         departure_location: tripData.departure_location,
         arrival_location: tripData.arrival_location,
         departure_time: new Date(tripData.departure_time).toISOString(),
         arrival_time: new Date(tripData.arrival_time).toISOString(),
         base_price: parseFloat(tripData.base_price),
-        status: tripData.status,
+        status: "SCHEDULED",
         seats: cleanSeats
       };
 
-      console.log("Submitting Payload:", JSON.stringify(payload, null, 2));
-      // await PosthData(access_token, "trips/create", payload);
-
-      navigate("/trips");
+      const response = await PosthData(
+        access_token || localStorage.getItem('access_token'),
+        "trip",
+        payload
+      );
+      
+      setSuccess("Trip created successfully!");
+      
+      setTimeout(() => {
+        navigate("/trips");
+      }, 1500);
+      
     } catch (err) {
       setError(err.message || "Failed to submit trip configuration");
     } finally {
@@ -181,16 +261,101 @@ const AddTrip = () => {
     }
   };
 
-  // --- STEP 1: ROUTE & VEHICLE DETAILS ---
+  // --- STEP 1: ROUTE & VEHICLE SEARCH ---
   const renderStepOne = () => (
     <div className={style.tripForm}>
-      <h2>Trip & Vehicle Parameters</h2>
-      <p className={style.subtitle}>Set origin, destination, schedules, and base pricing</p>
+      <h2>Trip & Vehicle Setup</h2>
+      <p className={style.subtitle}>Search for a vehicle by registration number and set trip details</p>
+
+      {/* Error Messages */}
+      {error && (
+        <div className={style.errorMessage}>
+          <FaInfoCircle className={style.messageIcon} />
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className={style.closeMsgBtn}>
+            <FaTimes />
+          </button>
+        </div>
+      )}
 
       <div className={style.formGrid}>
+        {/* Vehicle Search Section */}
+        <div className={style.formSection}>
+          <h3><FaSearch /> Search Vehicle</h3>
+          <div className={style.searchVehicleGroup}>
+            <div className={style.searchInputGroup}>
+              <input
+                type="text"
+                placeholder="Enter full registration (e.g., KDE 789Y)"
+                value={searchRegistration}
+                onChange={(e) => setSearchRegistration(e.target.value)}
+                onKeyPress={handleSearchKeyPress}
+                className={style.searchInput}
+                disabled={vehicleFound}
+              />
+              <button 
+                onClick={searchVehicle} 
+                className={style.searchBtn}
+                disabled={searchingVehicle || vehicleFound}
+              >
+                {searchingVehicle ? <FaSpinner className={style.spinner} /> : <FaSearch />}
+              </button>
+            </div>
+            {vehicleFound && (
+              <button 
+                onClick={() => {
+                  setVehicleFound(false);
+                  setVehicleData(null);
+                  setSearchRegistration("");
+                  setError(null);
+                  setVehicleSearchAttempted(false);
+                }} 
+                className={style.clearVehicleBtn}
+              >
+                <FaTimes /> Clear
+              </button>
+            )}
+          </div>
+
+          {vehicleFound && vehicleData && (
+            <div className={style.vehicleCard}>
+              <div className={style.vehicleCardBody}>
+                <div className={style.vehicleCardRow}>
+                  <span className={style.vehicleCardLabel}>Operator:</span>
+                  <span className={style.vehicleCardValue}>{vehicleData.operator_name || "N/A"}</span>
+                </div>
+                <div className={style.vehicleCardRow}>
+                  <span className={style.vehicleCardLabel}>Registration:</span>
+                  <span className={style.vehicleCardValue}>{vehicleData.registration_number || "N/A"}</span>
+                </div>
+                <div className={style.vehicleCardRow}>
+                  <span className={style.vehicleCardLabel}>Type:</span>
+                  <span className={style.vehicleCardValue}>{vehicleData.vehicle_type || "N/A"}</span>
+                </div>
+                <div className={style.vehicleCardRow}>
+                  <span className={style.vehicleCardLabel}>Service Class:</span>
+                  <span className={style.vehicleCardValue}>{vehicleData.service_class || "N/A"}</span>
+                </div>
+                <div className={style.vehicleCardRow}>
+                  <span className={style.vehicleCardLabel}>Total Seats:</span>
+                  <span className={style.vehicleCardValue}>{vehicleData.total_seats || "N/A"}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {vehicleSearchAttempted && !vehicleFound && !searchingVehicle && (
+            <div className={style.noVehicleFound}>
+              <FaInfoCircle className={style.noVehicleIcon} />
+              <span>No vehicle found. Please check the registration number and try again.</span>
+            </div>
+          )}
+        </div>
+
+        {/* Route Information */}
         <div className={style.formSection}>
           <h3><FaMapMarkerAlt /> Route Information</h3>
-          <div className={style.formRowTriple}>
+          <div className={style.formRow}>
             <div className={style.formGroup}>
               <label>Departure Location</label>
               <input
@@ -211,6 +376,8 @@ const AddTrip = () => {
                 required
               />
             </div>
+          </div>
+          <div className={style.formRow}>
             <div className={style.formGroup}>
               <label>Base Price (KSh)</label>
               <input
@@ -224,6 +391,7 @@ const AddTrip = () => {
           </div>
         </div>
 
+        {/* Schedule */}
         <div className={style.formSection}>
           <h3><FaClock /> Schedule</h3>
           <div className={style.formRow}>
@@ -249,62 +417,13 @@ const AddTrip = () => {
             </div>
           </div>
         </div>
-
-        <div className={style.formSection}>
-          <h3><FaBus /> Vehicle Details</h3>
-          <div className={style.formRowFour}>
-            <div className={style.formGroup}>
-              <label>Operator Name</label>
-              <input
-                type="text"
-                name="vehicle.operator_name"
-                value={tripData.vehicle.operator_name}
-                onChange={handleTripChange}
-                placeholder="e.g. 237 Sacco"
-              />
-            </div>
-            <div className={style.formGroup}>
-              <label>Registration Number</label>
-              <input
-                type="text"
-                name="vehicle.registration_number"
-                value={tripData.vehicle.registration_number}
-                onChange={handleTripChange}
-                placeholder="e.g. KDA 123X"
-              />
-            </div>
-            <div className={style.formGroup}>
-              <label>Vehicle Type</label>
-              <select
-                name="vehicle.vehicle_type"
-                value={tripData.vehicle.vehicle_type}
-                onChange={handleTripChange}
-              >
-                {vehicleTypes.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-            </div>
-            <div className={style.formGroup}>
-              <label>Service Class</label>
-              <select
-                name="vehicle.service_class"
-                value={tripData.vehicle.service_class}
-                onChange={handleTripChange}
-              >
-                {serviceClasses.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className={style.formActions}>
         <button className={style.cancelBtn} onClick={() => navigate("/trips")}>Cancel</button>
         <button
           className={style.nextBtn}
+          disabled={!vehicleFound}
           onClick={() => {
             if (!tripData.departure_location || !tripData.arrival_location || !tripData.departure_time) {
               alert("Please fill in required schedule and route fields.");
@@ -314,7 +433,7 @@ const AddTrip = () => {
             setCurrentStep(2);
           }}
         >
-          Next: Layout & Pricing
+          Next: Layout & Seats
         </button>
       </div>
     </div>
@@ -323,10 +442,9 @@ const AddTrip = () => {
   // --- STEP 2: SEAT LAYOUT & PRICING ---
   const renderStepTwo = () => (
     <div className={style.seatLayoutContainer}>
-      <h2>Vehicle Seat Layout Setup</h2>
-      <p className={style.subtitle}>Define layout grid parameters and row-specific pricing overrides</p>
+      <h2>Seat Layout Configuration</h2>
+      <p className={style.subtitle}>Configure seat layout and pricing for {vehicleData?.operator_name || 'vehicle'}</p>
 
-      {/* Grid Controls */}
       <div className={style.layoutControls}>
         <div className={style.controlGroup}>
           <label>Total Rows</label>
@@ -379,7 +497,7 @@ const AddTrip = () => {
 
           <div className={style.totalSeatsBadge}>
             <FaSeatIcon className={style.seatIconBadge} />
-            <span>Total Seats: <strong>{seats.length || seatConfig.rows * seatConfig.columns.length}</strong></span>
+            <span>Total: <strong>{seats.length || seatConfig.rows * seatConfig.columns.length}</strong></span>
           </div>
         </div>
       </div>
@@ -428,7 +546,7 @@ const AddTrip = () => {
         {/* Right Column: Row Price Overrides */}
         <div className={style.pricingPanel}>
           <h3><FaTh /> Row Price Configuration</h3>
-          <p className={style.panelHint}>Customize individual row prices (e.g. VIP front seats or discounted rear seats).</p>
+          <p className={style.panelHint}>Customize individual row prices (e.g. VIP front seats or discounted rear).</p>
 
           <div className={style.pricingTable}>
             <div className={style.pricingHeader}>
@@ -472,11 +590,12 @@ const AddTrip = () => {
           onClick={handleSubmit}
           disabled={loading || seats.length === 0}
         >
-          {loading ? "Saving..." : "Create Trip"}
+          {loading ? <><FaSpinner className={style.spinner} /> Creating...</> : "Create Trip"}
         </button>
       </div>
 
       {error && <div className={style.errorMessage}>{error}</div>}
+      {success && <div className={style.successMessage}>{success}</div>}
     </div>
   );
 

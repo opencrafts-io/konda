@@ -138,7 +138,6 @@ const AdminDashboard = () => {
       }
 
     } catch (err) {
-      console.error("Error fetching admin data:", err);
       setError(err.message || "Failed to load admin dashboard");
     } finally {
       setLoading(false);
