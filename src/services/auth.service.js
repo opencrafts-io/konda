@@ -12,9 +12,9 @@ class AuthService {
     this._cacheDuration = 60000; // 1 minute cache
     
     // Get URLs from environment variables
-    this.baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
+    this.baseUrl = import.meta.env.VITE_BASE_URL || 'https://api.opencrafts.io/omnibus';
     this.verisafeUrl = import.meta.env.VITE_VERISAFE_URL || 'https://qaverisafe.opencrafts.io';
-    this.appUrl = import.meta.env.VITE_APP_URL || 'http://localhost:8080';
+    this.appUrl = import.meta.env.VITE_APP_URL || 'https://konda.opencrafts.io';
   }
 
   // Get the base URL for API calls
